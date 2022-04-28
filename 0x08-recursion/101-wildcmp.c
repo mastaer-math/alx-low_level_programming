@@ -1,4 +1,4 @@
-#include "maih.h"
+#include "main.h"
 
 /**
  * wildcmp - Compare strings
