@@ -2,48 +2,57 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-**
- * argstostr - function that concatenates all the arguments of your program.
- *
- *
- * @ac: ARGC
- * @av: ARGV
- *
- * Return: Pointer
+/**
+ * _strlen - length of a string
+ * @s: the string
+ * Return: length
+ **/
+int _strlen(char *s)
+{
+	int len;
+
+	if (!s)
+		return (0);
+	for (len = 0; s[len]; len++)
+	{
+	}
+	return (len);
+}
+/**
+ * argstostr - concasts args to str
+ * @ac: # of args
+ * @av: names of args
+ * Return: char *
  */
 char *argstostr(int ac, char **av)
 {
-        int i = 0, j, longitude = 0, l, k;
-        char *string;
+	int i;
+	int j;
+	int x = 0;
+	int len = 0;
+	char *newstring;
 
-        if (ac == 0 || av == '\0')
-        return (NULL);
-
-        for (i = 0; i < ac; i++)
-        {
-                j = 0;
-                while (av[i][j] != '\0')
-                {
-                        j++;
-                }
-                longitude  +=  j + 1;
-        }
-        string = malloc(sizeof(char) * (longitude + 1));
-
-        if (string == NULL)
-        {
-                return (NULL);
-        }
-        longitude = 0;
-        for (k = 0; k < ac; k++)
-        {
-                for (l = 0; av[k][l] != '\0'; l++)
-                {
-                        *(string + longitude) = av[k][l];
-                        longitude++;
-                }
-                *(string + longitude) = '\n';
-                longitude++;
-        }
-
-"100-argstostr.c" 50L, 748C    
+	if (!ac || !av)
+	{
+		return (NULL);
+	}
+	for (i = 0; i < ac; i++)
+	{
+		len += _strlen(*(av + i));
+	}
+	newstring = malloc(sizeof(char) * (len + ac + 1));
+	if (!newstring)
+	{
+		return (NULL);
+	}
+	for (i = 0; i < ac; i++)
+	{
+		for (j = 0; av[i][j]; j++, x++)
+		{
+			newstring[x] = av[i][j];
+		}
+		newstring[x++] = '\n';
+	}
+	newstring[x] = '\0';
+	return (newstring);
+}
