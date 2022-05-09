@@ -1,132 +1,93 @@
 #include "main.h"
-
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
 /**
- * adding_all_mul - sum all the addition to know the multiplication result
- * @a: number 1
- * @len_a: lenght of number 1
- * @b: number 2
- * @len_b: lenght of number 2
- * Return: Addition pointer to the total resul of the  multiplication
+ * _isnumber - checks if string is number
+ *
+ * @s: string
+ *
+ * Return: 1 if number, 0 if not
  */
-add_t *adding_all_mul(char *a, int len_a, char *b, int len_b)
+int _isnumber(char *s)
 {
-	add_t *result = NULL;
-	int i = 0, j = 0, carry = 0;
+	int i, check, d;
 
-	result = malloc(sizeof(add_t));
-
-	result->next = NULL, result->n_dig = 0, result->len_r = len_a + len_b;
-
-	result->n_add = malloc(sizeof(char) * result->len_r);
-
-	for (i = 0; i < result->len_r; i++)
-		result->n_add[i] = '0';
-
-	for (i = len_a - 1; i >= 0; i--)
+	d = 0, check = 1;
+	for (i = 0; *(s + i) != 0; i++)
 	{
-		carry = 0;
-		for (j = len_b - 1; j >= 0; j--)
+		d = isdigit(*(s + i));
+		if (d == 0)
 		{
-			carry += (a[i] - '0') * (b[j] - '0');
-			carry += result->n_add[i + j + 1] - '0';
-
-			result->n_add[i + j + 1] = (carry % 10) + '0';
-			carry /= 10;
+			check = 0;
+			break;
 		}
-		if (carry)
-			result->n_add[i + j + 1] = (carry % 10) + '0';
 	}
-	if (result->n_add[0] != '0')
-		result->n_dig = len_a + len_b;
-	else
-		result->n_dig = len_a + len_b - 1;
-
-	return (result);
+	return (check);
 }
 
 /**
- * print_free_result - print the result of the multiplication and free all
- * @result: Addition pointer to the total resul of the  multiplication
- * Result: Nothing
+ * _callocX - reserves memory initialized to 0
+ *
+ * @nmemb: # of bytes
+ *
+ * Return: pointer
  */
-void print_free_result(add_t *result)
+char *_callocX(unsigned int nmemb)
 {
-	int i = 0, start_n = 0;
+	unsigned int i;
+	char *p;
 
-	i = 0;
-	while (i < result->n_dig)
+	p = malloc(nmemb + 1);
+	if (p == 0)
+		return (0);
+	for (i = 0; i < nmemb; i++)
+		p[i] = '0';
+	p[i] = '\0';
+	return (p);
+}
+
+/**
+ * main - program that multiplies two positive numbers.
+ *
+ * @argc: count
+ * @argv: vector
+ * Return: output
+ */
+int main(int argc, char **argv)
+{
+	int i, j, l1, l2, lful, mul, add, ten, ten2, tl, zer = 0;
+	char *res;
+
+	if (argc != 3 || _isnumber(argv[1]) == 0 || _isnumber(argv[2]) == 0)
+		printf("Error\n"), exit(98);
+	if (atoi(argv[1]) == 0 || atoi(argv[2]) == 0)
+		printf("0\n"), exit(0);
+	l1 = strlen(argv[1]), l2 = strlen(argv[2]);
+	lful = l1 + l2;
+	res = _callocX(lful);
+	if (res == 0)
+		printf("Error\n"), exit(98);
+	for (i = l2 - 1; i >= 0; i--)
 	{
-		if (start_n || result->n_add[result->len_r - result->n_dig + i] != '0')
+		ten = 0, ten2 = 0;
+		for (j = l1 - 1; j >= 0; j--)
 		{
-			_putchar(result->n_add[result->len_r - result->n_dig + i]);
-			start_n = 1;
+			tl = i + j + 1;
+			mul = (argv[1][j] - '0') * (argv[2][i] - '0') + ten;
+			ten =  mul / 10;
+			add = (res[tl] - '0') + (mul % 10) + ten2;
+			ten2 = add / 10;
+			res[tl] = (add % 10) + '0';
 		}
-		i++;
+		res[tl - 1] = (ten + ten2) + '0';
 	}
-	if (!result->n_dig || !start_n)
-		_putchar('0');
-	_putchar('\n');
-	free(result->n_add);
-	free(result);
-}
-
-/**
- * error_message - print an error message and exit with status 98
- * Return: Nothing
- */
-void error_message(void)
-{
-	char error_msg[] = "Error";
-	int i = 0;
-
-	while (error_msg[i] != '\0')
-	{
-		_putchar(error_msg[i]);
-		i++;
-	}
-
-	_putchar('\n');
-
-	exit(98);
-}
-
-/**
- * main - multiply 2 long numbers
- * usage <> ./mul num1 num2
- * @ac: number of arguments
- * @av: list of arguments
- * Return: 0 on success, another number otherwise
- */
-int main(int ac, char **av)
-{
-	char *a = NULL, *b =  NULL;
-	int i = 0, len_a = 0, len_b = 0, is_a = 1, is_b = 1, len_r = 0;
-	add_t *result = NULL;
-
-	if (ac != 3)
-		error_message();
-
-	for (i = 0, a = av[1], b = av[2]; is_a == 1 || is_b == 1; i++)
-	{
-		if (is_a == 1 && a[i] == '\0')
-			is_a = 0, len_a = i;
-		if (is_b == 1 && b[i] == '\0')
-			is_b = 0, len_b = i;
-		if ((is_a == 1 && (a[i] < '0' || a[i] > '9')) ||
-				(is_b == 1 && (b[i] < '0' || b[i] > '9')))
-			error_message();
-	}
-
-	if (len_a == 0 || len_b == 0)
-		error_message();
-
-	len_r = len_a + len_b;
-	if (len_a > len_b)
-		a = av[2], b = av[1], len_a = len_b, len_b = len_r - len_b;
-
-	result = adding_all_mul(a, len_a, b, len_b);
-
-	print_free_result(result);
-
+	if (res[0] == '0')
+		zer = 1;
+	for (; zer < lful; zer++)
+		printf("%c", res[zer]);
+	printf("\n");
+	free(res);
 	return (0);
 }
