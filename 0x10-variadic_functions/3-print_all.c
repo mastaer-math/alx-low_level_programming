@@ -8,14 +8,14 @@
 */
 void print_all(const char * const format, ...)
 {
-	va_list list;
-	unsigned int k = 0, start = 0;
-	char *l;
+		va_list list;
+	unsigned int j = 0, start = 0;
+	char *p;
 
 	va_start(list, format);
-	while (format && format[k] != '\0')
+	while (format && format[j] != '\0')
 	{
-		switch (format[k])
+		switch (format[j])
 		{ case 'c':
 			switch (start)
 			{ case 1: printf(", "); }
@@ -38,13 +38,13 @@ void print_all(const char * const format, ...)
 			switch (start)
 			{ case 1: printf(", "); }
 			start = 1;
-			l = va_arg(list, char*);
-			if (l)
-			{ printf("%s", l);
+			p = va_arg(list, char*);
+			if (p)
+			{ printf("%s", p);
 			break; }
-			printf("%p", l);
+			printf("%p", p);
 			break; }
-		k++;
+		j++;
 	}
 	printf("\n");
 	va_end(list);
