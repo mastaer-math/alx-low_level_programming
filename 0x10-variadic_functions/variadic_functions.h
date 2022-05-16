@@ -5,17 +5,15 @@
 
 /**
 * struct fmt - Struct format
-* type format
-* print function
+* @f: type format
+* @p: print function
 */
 
 typedef struct fmt
 {
 	char *f;
 	void (*p)(va_list s);
-}
-
-my_fmt;
+} my_fmt;
 
 int sum_them_all(const unsigned int n, ...);
 void print_numbers(const char *separator, const unsigned int n, ...);
