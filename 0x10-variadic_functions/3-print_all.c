@@ -38,8 +38,8 @@ void print_all(const char * const format, ...)
 			switch (start)
 			{ case 1: printf(", "); }
 			start = 1;
-			p = va_arg(list, char*);
-			if (p)
+			l = va_arg(list, char*);
+			if (l)
 			{ printf("%s", l);
 			break; }
 			printf("%p", l);
